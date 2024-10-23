@@ -1,0 +1,25 @@
+import sysfrom pathlib import Path
+from PyQt6.QtWidgets import QApplication, QMainWindow, QFileDialog, QTextEdit, QPushButton
+class TextEditor(QMainWindow):
+    def __init__(self):        super().__init__()
+        self.setWindowTitle("Текстовый редактор")        self.resize(800, 600)
+        # Создание кнопок открытия и сохранения файла
+        open_button = QPushButton('Открыть', self)        save_button = QPushButton('Сохранить', self)
+        # Установка сигнала на открытие файла
+        open_button.clicked.connect(self.open_file)        save_button.clicked.connect(self.save_file)
+        # Создание текстового поля для отображения текста
+        self.text_edit = QTextEdit(self)        self.text_edit.setReadOnly(False)
+        # Помещение кнопок и текстового поля на окно
+        open_button.move(10, 10)        save_button.move(10, 40)
+        self.text_edit.move(10, 70)        self.text_edit.resize(780, 500)
+
+    def open_file(self):        """Функция для открытия файла"""
+        filename, _ = QFileDialog.getOpenFileName(self, 'Выберите файл', filter='*.txt')        if filename:
+            with open(filename, 'r') as file:                content = file.read()
+            self.text_edit.setText(content)
+    def save_file(self):        """Функция для сохранения файла"""
+        filename, _ = QFileDialog.getSaveFileName(self, 'Сохраните файл', filter='*.txt')        if filename:
+            with open(filename, 'w') as file:                file.write(self.text_edit.toPlainText())
+if __name__ == "__main__":
+    app = QApplication(sys.argv)    window = TextEditor()
+    window.show()    sys.exit(app.exec())
